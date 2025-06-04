@@ -7,6 +7,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using src.DeviceEmployeeAuthManager.DAL;
+using src.DeviceEmployeeAuthManager.Middlewares;
 using src.DeviceEmployeeAuthManager.Repositories;
 using src.DeviceEmployeeAuthManager.Services;
 
@@ -15,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultDatabase");
 builder.Services.AddDbContext<DeviceEmployeeDbContext>(opt => opt.UseSqlServer(connectionString));
 
@@ -22,6 +24,8 @@ builder.Services.AddTransient<IEmployeeService, EmployeeService>();
 builder.Services.AddTransient<IDeviceService, DeviceService>();
 
 var app = builder.Build();
+app.UseMiddleware<BasicAuthMiddleware>();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
