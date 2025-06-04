@@ -5,7 +5,7 @@ using src.DeviceEmployeeAuthManager.Services;
 
 namespace src.DeviceEmployeeAuthManager.Controllers;
 
-[Authorize]
+[AllowAnonymous]
 [ApiController]
 [Route("/api/accounts/[controller]")]
 public class AccountController : ControllerBase

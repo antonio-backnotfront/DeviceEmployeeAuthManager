@@ -10,4 +10,5 @@ public interface IAccountService
     public Task<Account> CreateAccount(CreateAccountDto dto, CancellationToken cancellationToken);
     public Task<bool> UpdateAccount(int id, UpdateAccountDto dto, CancellationToken cancellationToken);
     public Task<bool> DeleteAccount(int id, CancellationToken cancellationToken);
+    public Task<Account> GetAccountByUsername(string username, CancellationToken cancellationToken);
 }

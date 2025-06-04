@@ -96,4 +96,11 @@ public class AccountService : IAccountService
         await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
+
+    public async Task<Account> GetAccountByUsername(string username, CancellationToken cancellationToken)
+    {
+        var account = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Username == username, cancellationToken);
+        if (account == null) throw new KeyNotFoundException($"Account with username {username} not found.");
+        return account;
+    }
 }

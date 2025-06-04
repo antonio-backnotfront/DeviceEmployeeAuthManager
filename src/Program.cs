@@ -11,14 +11,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using src.DeviceEmployeeAuthManager.DAL;
+using src.DeviceEmployeeAuthManager.Helpers.Options;
 using src.DeviceEmployeeAuthManager.Middlewares;
 // using src.DeviceEmployeeAuthManager.Repositories;
 using src.DeviceEmployeeAuthManager.Services;
+using src.DeviceEmployeeAuthManager.Services.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var jwtConfigData = builder.Configuration.GetSection("Jwt");
+builder.Services.Configure<JwtOptions>(jwtConfigData);
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultDatabase");
@@ -27,7 +32,11 @@ builder.Services.AddDbContext<DeviceEmployeeDbContext>(opt => opt.UseSqlServer(c
 builder.Services.AddTransient<IEmployeeService, EmployeeService>();
 builder.Services.AddTransient<IDeviceService, DeviceService>();
 builder.Services.AddTransient<IAccountService, AccountService>();
-
+builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
 
 // !======== basic authentication (login + password) ========!
 // app.UseMiddleware<BasicAuthMiddleware>();
@@ -56,10 +65,10 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,   //by who
         ValidateAudience = true, //for whom
         ValidateLifetime = true,
-        ClockSkew = TimeSpan.FromMinutes(2),
-        ValidIssuer = "https://localhost:5001", //should come from configuration
-        ValidAudience = "https://localhost:5001", //should come from configuration
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]))
+        ClockSkew = TimeSpan.FromMinutes(10),
+        ValidIssuer = jwtConfigData["Issuer"], //should come from configuration
+        ValidAudience = jwtConfigData["Audience"], //should come from configuration
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfigData["Key"]))
     };
         
     opt.Events = new JwtBearerEvents
@@ -97,6 +106,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
