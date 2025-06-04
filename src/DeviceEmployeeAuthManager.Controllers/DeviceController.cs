@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using src.DeviceEmployeeAuthManager.DAL;
 using src.DeviceEmployeeAuthManager.DTO;
@@ -6,15 +7,16 @@ using src.DeviceEmployeeAuthManager.Services;
 
 namespace src.DeviceEmployeeAuthManager.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/devices/[controller]")]
 public class DeviceController : ControllerBase
 {
-    private readonly IDeviceService service;
+    private readonly IDeviceService _service;
 
     public DeviceController(IDeviceService deviceService)
     {
-        this.service = deviceService;
+        this._service = deviceService;
     }
 
     [HttpGet("/api/devices/")]
@@ -22,7 +24,7 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            var results = await service.GetAllDevices(ct);
+            var results = await _service.GetAllDevices(ct);
             return results.Count > 0 ? Ok(results) : NotFound("No devices found");
         }
         catch (Exception ex)
@@ -36,7 +38,7 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            var device = await service.GetDeviceById(id,ct);
+            var device = await _service.GetDeviceById(id,ct);
             return device is not null ? Ok(device) : NotFound("Device not found");
         }
         catch (Exception ex)
@@ -50,7 +52,7 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            await service.CreateDevice(dto, ct);
+            await _service.CreateDevice(dto, ct);
             return Created("/api/devices", dto);
         }
         catch (InvalidDeviceTypeException ex)
@@ -64,7 +66,7 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            await service.UpdateDevice(id, dto, ct);
+            await _service.UpdateDevice(id, dto, ct);
             return Ok();
         }
         catch (KeyNotFoundException)
@@ -86,7 +88,7 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            await service.DeleteDevice(id, ct);
+            await _service.DeleteDevice(id, ct);
             return Ok();
         }
         catch (KeyNotFoundException)

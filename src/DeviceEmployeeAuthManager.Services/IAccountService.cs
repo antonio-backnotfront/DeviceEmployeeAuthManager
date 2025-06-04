@@ -1,9 +1,13 @@
 using src.DeviceEmployeeAuthManager.DTO;
+using src.DeviceEmployeeAuthManager.Models;
 
-namespace src.DeviceEmployeeAuthManager.Repositories;
+namespace src.DeviceEmployeeAuthManager.Services;
 
-public interface IEmployeeService
+public interface IAccountService
 {
-    public Task<List<GetEmployeesDto>> GetAllEmployees(CancellationToken cancellationToken);
-    public Task<GetEmployeeDto?> GetEmployeeById(int id, CancellationToken cancellationToken);
+    public Task<List<GetAccountsDto>> GetAllAccounts(CancellationToken cancellationToken);
+    public Task<GetAccountDto?> GetAccountById(int id, CancellationToken cancellationToken);
+    public Task<Account> CreateAccount(CreateAccountDto dto, CancellationToken cancellationToken);
+    public Task<bool> UpdateAccount(int id, UpdateAccountDto dto, CancellationToken cancellationToken);
+    public Task<bool> DeleteAccount(int id, CancellationToken cancellationToken);
 }

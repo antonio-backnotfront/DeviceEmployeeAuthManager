@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace src.DeviceEmployeeAuthManager.DTO;
 
-public class CreateAccountDto
+public class UpdateAccountDto
 {
     public int Id;
     [Required]

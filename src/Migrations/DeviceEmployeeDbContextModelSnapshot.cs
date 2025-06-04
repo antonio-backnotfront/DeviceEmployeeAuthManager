@@ -50,7 +50,7 @@ namespace src.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Account");
+                    b.ToTable("Account", (string)null);
 
                     b.HasData(
                         new
@@ -121,7 +121,7 @@ namespace src.Migrations
 
                     b.HasIndex("DeviceTypeId");
 
-                    b.ToTable("Device");
+                    b.ToTable("Device", (string)null);
 
                     b.HasData(
                         new
@@ -200,7 +200,7 @@ namespace src.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("DeviceEmployee");
+                    b.ToTable("DeviceEmployee", (string)null);
 
                     b.HasData(
                         new
@@ -256,7 +256,7 @@ namespace src.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeviceType");
+                    b.ToTable("DeviceType", (string)null);
 
                     b.HasData(
                         new
@@ -313,7 +313,7 @@ namespace src.Migrations
 
                     b.HasIndex("PositionId");
 
-                    b.ToTable("Employee");
+                    b.ToTable("Employee", (string)null);
 
                     b.HasData(
                         new
@@ -391,7 +391,7 @@ namespace src.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Person");
+                    b.ToTable("Person", (string)null);
 
                     b.HasData(
                         new
@@ -461,7 +461,7 @@ namespace src.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Position");
+                    b.ToTable("Position", (string)null);
 
                     b.HasData(
                         new
@@ -510,7 +510,7 @@ namespace src.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Role", (string)null);
 
                     b.HasData(
                         new

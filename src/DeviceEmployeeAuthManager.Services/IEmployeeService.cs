@@ -1,6 +1,6 @@
 using src.DeviceEmployeeAuthManager.DTO;
 
-namespace src.DeviceEmployeeAuthManager.Repositories;
+namespace src.DeviceEmployeeAuthManager.Services;
 
 public interface IEmployeeService
 {

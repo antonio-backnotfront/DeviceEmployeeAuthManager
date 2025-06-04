@@ -1,17 +1,19 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using src.DeviceEmployeeAuthManager.Repositories;
+using src.DeviceEmployeeAuthManager.Services;
 
 namespace src.DeviceEmployeeAuthManager.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/employee/[controller]")]
 public class EmployeeController : ControllerBase
 {
-    private readonly IEmployeeService service;
+    private readonly IEmployeeService _service;
 
     public EmployeeController(IEmployeeService employeeService)
     {
-        this.service = employeeService;
+        this._service = employeeService;
     }
 
     [HttpGet("/api/employee")]
@@ -19,7 +21,7 @@ public class EmployeeController : ControllerBase
     {
         try
         {
-            var list = await service.GetAllEmployees(ct);
+            var list = await _service.GetAllEmployees(ct);
             return list.Any() ? Ok(list) : NotFound("No employees found");
         }
         catch (Exception ex)
@@ -33,7 +35,7 @@ public class EmployeeController : ControllerBase
     {
         try
         {
-            var employee = await service.GetEmployeeById(id, ct);
+            var employee = await _service.GetEmployeeById(id, ct);
             return employee != null ? Ok(employee) : NotFound("Employee not found");
         }
         catch (Exception ex)
