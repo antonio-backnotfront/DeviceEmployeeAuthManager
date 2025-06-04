@@ -135,15 +135,22 @@ public class DeviceService : IDeviceService
         if (device == null)
             throw new KeyNotFoundException($"Device with ID {id} not found.");
 
-        var deviceEmployee =
-            await _context.DeviceEmployees.FirstOrDefaultAsync(a => a.DeviceId == device.Id, cancellationToken);
+        var deviceEmployees = await _context.DeviceEmployees
+            .Where(de => de.DeviceId == id)
+            .ToListAsync(cancellationToken);
 
-        if (deviceEmployee != null)
-            _context.DeviceEmployees.Remove(deviceEmployee);
+        if (deviceEmployees.Any())
+            _context.DeviceEmployees.RemoveRange(deviceEmployees);
 
         _context.Devices.Remove(device);
 
         await _context.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    public async Task<List<int>> GetDeviceIdsByEmployeeId(int id, CancellationToken cancellationToken)
+    {
+        var deviceIds = await _context.DeviceEmployees.Where(d => d.EmployeeId == id).Select(d => d.DeviceId).ToListAsync(cancellationToken);
+        return deviceIds;
     }
 }

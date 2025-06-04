@@ -12,11 +12,13 @@ namespace src.DeviceEmployeeAuthManager.Controllers;
 [Route("/api/devices/[controller]")]
 public class DeviceController : ControllerBase
 {
-    private readonly IDeviceService _service;
+    private readonly IDeviceService _deviceService;
+    private readonly IAccountService _accountService;
 
-    public DeviceController(IDeviceService deviceService)
+    public DeviceController(IDeviceService deviceService, IAccountService accountService)
     {
-        this._service = deviceService;
+        this._deviceService = deviceService;
+        this._accountService = accountService;
     }
 
     [Authorize(Roles = "Admin")]
@@ -25,7 +27,7 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            var results = await _service.GetAllDevices(ct);
+            var results = await _deviceService.GetAllDevices(ct);
             return results.Count > 0 ? Ok(results) : NotFound("No devices found");
         }
         catch (Exception ex)
@@ -40,7 +42,18 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            var device = await _service.GetDeviceById(id,ct);
+            var currentUserName = User.Identity?.Name;
+            if (currentUserName == null)
+                return Forbid();
+            var currentUser = await _accountService.GetAccountByUsername(currentUserName, ct);
+            if (currentUser.Role.Name != "Admin")
+            {
+                var deviceIdsByEmployee = await _deviceService.GetDeviceIdsByEmployeeId(currentUser.EmployeeId, ct);
+                if (!deviceIdsByEmployee.Contains(id))
+                    return Forbid();
+            }
+            
+            var device = await _deviceService.GetDeviceById(id,ct);
             return device is not null ? Ok(device) : NotFound("Device not found");
         }
         catch (Exception ex)
@@ -55,7 +68,7 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            await _service.CreateDevice(dto, ct);
+            await _deviceService.CreateDevice(dto, ct);
             return Created("/api/devices", dto);
         }
         catch (InvalidDeviceTypeException ex)
@@ -71,7 +84,18 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            await _service.UpdateDevice(id, dto, ct);
+            var currentUserName = User.Identity?.Name;
+            if (currentUserName == null)
+                return Forbid();
+            var currentUser = await _accountService.GetAccountByUsername(currentUserName, ct);
+            if (currentUser.Role.Name != "Admin")
+            {
+                var deviceIdsByEmployee = await _deviceService.GetDeviceIdsByEmployeeId(currentUser.EmployeeId, ct);
+                if (!deviceIdsByEmployee.Contains(id))
+                    return Forbid();
+            }
+            
+            await _deviceService.UpdateDevice(id, dto, ct);
             return Ok();
         }
         catch (KeyNotFoundException)
@@ -94,7 +118,7 @@ public class DeviceController : ControllerBase
     {
         try
         {
-            await _service.DeleteDevice(id, ct);
+            await _deviceService.DeleteDevice(id, ct);
             return Ok();
         }
         catch (KeyNotFoundException)

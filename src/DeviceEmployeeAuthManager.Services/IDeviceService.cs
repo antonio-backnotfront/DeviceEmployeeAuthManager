@@ -15,4 +15,6 @@ public interface IDeviceService
     public Task<bool> UpdateDevice(int id, UpdateDeviceDto updateDeviceDto, CancellationToken cancellationToken);
     
     public Task<bool> DeleteDevice(int id, CancellationToken cancellationToken);
+
+    public Task<List<int>> GetDeviceIdsByEmployeeId(int id, CancellationToken cancellationToken);
 }
