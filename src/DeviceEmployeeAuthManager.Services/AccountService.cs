@@ -99,7 +99,9 @@ public class AccountService : IAccountService
 
     public async Task<Account> GetAccountByUsername(string username, CancellationToken cancellationToken)
     {
-        var account = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Username == username, cancellationToken);
+        var account = await _context.Accounts
+            .Include(a => a.Role)
+            .FirstOrDefaultAsync(acc => acc.Username == username, cancellationToken);
         if (account == null) throw new KeyNotFoundException($"Account with username {username} not found.");
         return account;
     }

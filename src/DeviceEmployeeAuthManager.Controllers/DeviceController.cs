@@ -7,7 +7,7 @@ using src.DeviceEmployeeAuthManager.Services;
 
 namespace src.DeviceEmployeeAuthManager.Controllers;
 
-[Authorize]
+
 [ApiController]
 [Route("/api/devices/[controller]")]
 public class DeviceController : ControllerBase
@@ -19,6 +19,7 @@ public class DeviceController : ControllerBase
         this._service = deviceService;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("/api/devices/")]
     public async Task<IActionResult> GetDevices(CancellationToken ct)
     {
@@ -33,6 +34,7 @@ public class DeviceController : ControllerBase
         }
     }
     
+    [Authorize(Roles = "Admin, User")]
     [HttpGet("/api/devices/{id}")]
     public async Task<IActionResult> GetDevice(int id, CancellationToken ct)
     {
@@ -47,6 +49,7 @@ public class DeviceController : ControllerBase
         }
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpPost("/api/devices/")]
     public async Task<IActionResult> AddDevice(CreateDeviceDto dto, CancellationToken ct)
     {
@@ -61,6 +64,8 @@ public class DeviceController : ControllerBase
         
         }
     }
+    
+    [Authorize(Roles = "Admin, User")]
     [HttpPut("/api/devices/{id}")]
     public async Task<IActionResult> UpdateDevice(int id, UpdateDeviceDto dto, CancellationToken ct)
     {
@@ -83,6 +88,7 @@ public class DeviceController : ControllerBase
         }
     }
     
+    [Authorize(Roles = "Admin, User")]
     [HttpDelete("/api/devices/{id}")]
     public async Task<IActionResult> DeleteDevice(int id, CancellationToken ct)
     {

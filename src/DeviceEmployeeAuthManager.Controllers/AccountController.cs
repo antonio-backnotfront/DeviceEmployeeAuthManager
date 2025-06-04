@@ -5,7 +5,7 @@ using src.DeviceEmployeeAuthManager.Services;
 
 namespace src.DeviceEmployeeAuthManager.Controllers;
 
-[AllowAnonymous]
+
 [ApiController]
 [Route("/api/accounts/[controller]")]
 public class AccountController : ControllerBase
@@ -17,6 +17,7 @@ public class AccountController : ControllerBase
         this._service = accountService;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("/api/accounts")]
     public async Task<IActionResult> GetAllAccounts(CancellationToken ct)
     {
@@ -31,11 +32,24 @@ public class AccountController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin, User")]
     [HttpGet("/api/accounts/{id}")]
     public async Task<IActionResult> GetAccountById(int id, CancellationToken ct)
     {
         try
         {
+            var currentUserName = User.Identity?.Name;
+            // Console.WriteLine($"currentUserName: {currentUserName}");
+            if (currentUserName == null)
+                return Forbid();
+            var currentUser = await _service.GetAccountByUsername(currentUserName, ct);
+            // if (currentUser == null)
+            //     return Forbid();
+            // Console.WriteLine($"currentUserId: {currentUser.Id}");
+            // Console.WriteLine($"searched usedId: {id}");
+            if (currentUser.Role.Name != "Admin" && currentUser.Id != id)
+                return Forbid();
+
             var account = await _service.GetAccountById(id, ct);
             
             return account != null ? Ok(account) : NotFound("Account not found");
@@ -46,6 +60,7 @@ public class AccountController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("/api/accounts")]
     public async Task<IActionResult> CreateAccount(CreateAccountDto dto, CancellationToken ct)
     {
@@ -64,11 +79,19 @@ public class AccountController : ControllerBase
         }
     }
     
+    [Authorize(Roles = "Admin, User")]
     [HttpPut("/api/accounts/{id}")]
-    public async Task<IActionResult> CreateAccount(int id, UpdateAccountDto dto, CancellationToken ct)
+    public async Task<IActionResult> UpdateAccount(int id, UpdateAccountDto dto, CancellationToken ct)
     {
         try
         {
+            var currentUserName = User.Identity?.Name;
+            if (currentUserName == null)
+                return Forbid();
+            var currentUser = await _service.GetAccountByUsername(currentUserName, ct);
+            if (currentUser.Role.Name != "Admin" && currentUser.Id != id)
+                return Forbid();
+
             await _service.UpdateAccount(id, dto, ct);
             return Ok();
         }
@@ -82,6 +105,7 @@ public class AccountController : ControllerBase
         }
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpDelete("/api/accounts/{id}")]
     public async Task<IActionResult> DeleteAccount(int id, CancellationToken ct)
     {
