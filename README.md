@@ -13,6 +13,12 @@
   "AllowedHosts": "*",
   "ConnectionStrings": {
     "DefaultDatabase": "Server=your_server;Database=your_db;User=placeholder;Password=placeholder;"
+  },
+  "Jwt": {
+    "Issuer": "who issues the token",
+    "Audience": "for who the token is issued",
+    "Key": "key",
+    "ValidInMinutes": "integer in minutes specifying how long is token valid"
   }
 }
 ```
