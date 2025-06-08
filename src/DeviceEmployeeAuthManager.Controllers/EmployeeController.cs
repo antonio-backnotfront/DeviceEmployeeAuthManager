@@ -18,6 +18,7 @@ public class EmployeeController : ControllerBase
         this._service = employeeService;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("/api/employee")]
     public async Task<IActionResult> GetAllEmployees(CancellationToken ct)
     {
@@ -33,6 +34,7 @@ public class EmployeeController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("/api/employee/{id}")]
     public async Task<IActionResult> GetEmployeeById(int id, CancellationToken ct)
     {

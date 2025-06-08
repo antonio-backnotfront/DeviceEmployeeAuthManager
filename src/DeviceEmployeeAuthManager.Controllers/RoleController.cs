@@ -18,6 +18,7 @@ public class RoleController : ControllerBase
         this._service = employeeService;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("/api/roles")]
     public async Task<IActionResult> GetAllRoles(CancellationToken ct)
     {
