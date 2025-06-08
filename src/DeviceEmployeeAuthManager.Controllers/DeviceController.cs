@@ -4,6 +4,7 @@ using src.DeviceEmployeeAuthManager.DAL;
 using src.DeviceEmployeeAuthManager.DTO;
 using src.DeviceEmployeeAuthManager.Exceptions;
 using src.DeviceEmployeeAuthManager.Services;
+using src.DeviceEmployeeAuthManager.Services.Tokens;
 
 namespace src.DeviceEmployeeAuthManager.Controllers;
 
@@ -14,11 +15,13 @@ public class DeviceController : ControllerBase
 {
     private readonly IDeviceService _deviceService;
     private readonly IAccountService _accountService;
+    private readonly ILogger<DeviceController> _logger;
 
-    public DeviceController(IDeviceService deviceService, IAccountService accountService)
+    public DeviceController(IDeviceService deviceService, IAccountService accountService, ILogger<DeviceController> logger)
     {
         this._deviceService = deviceService;
         this._accountService = accountService;
+        this._logger = logger;
     }
 
     [Authorize(Roles = "Admin")]
@@ -32,6 +35,7 @@ public class DeviceController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
@@ -58,6 +62,7 @@ public class DeviceController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
@@ -73,8 +78,8 @@ public class DeviceController : ControllerBase
         }
         catch (InvalidDeviceTypeException ex)
         {
+            _logger.LogError(ex, ex.Message);
             return BadRequest(ex.Message);
-        
         }
     }
     
@@ -100,14 +105,17 @@ public class DeviceController : ControllerBase
         }
         catch (KeyNotFoundException)
         {
+            _logger.LogError("The device that needs to be updated was not found");
             return NotFound($"No device found with id: '{id}'");
         }
         catch (InvalidDeviceTypeException ex)
         {
+            _logger.LogError(ex, ex.Message);
             return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
@@ -123,10 +131,12 @@ public class DeviceController : ControllerBase
         }
         catch (KeyNotFoundException)
         {
+            _logger.LogError("The device that needs to be deleted was not found");
             return NotFound($"No device found with id: '{id}'");
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
