@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using src.DeviceEmployeeAuthManager.DAL;
 // using src.DeviceEmployeeAuthManager.;
 using src.DeviceEmployeeAuthManager.Services;
 using src.DeviceEmployeeAuthManager.DTO;
+using src.DeviceEmployeeAuthManager.Exceptions;
+using src.DeviceEmployeeAuthManager.Models;
 
 namespace src.DeviceEmployeeAuthManager.Services;
 
@@ -63,5 +66,55 @@ public class EmployeeService : IEmployeeService
         {
             throw new ApplicationException("Error while getting employee by id", ex);
         }
+    }
+    
+    public async Task<CreateEmployeeDto> CreateEmployee(CreateEmployeeDto dto, CancellationToken cancellationToken)
+    {
+        var position = await _context.Positions.FirstOrDefaultAsync(e => e.Id == dto.PositionId);
+        if (position == null)
+        {
+            throw new KeyNotFoundException("Position not found");
+        }
+        CreatePersonDto personDto = new CreatePersonDto()
+        {
+            FirstName = dto.Person.FirstName,
+            MiddleName = dto.Person.MiddleName,
+            LastName = dto.Person.LastName,
+            Email = dto.Person.Email,
+            PassportNumber = dto.Person.PassportNumber,
+            PhoneNumber = dto.Person.PhoneNumber
+        };
+        Person person = new Person
+        {
+            PassportNumber = personDto.PassportNumber,
+            FirstName = personDto.FirstName,
+            MiddleName = personDto.MiddleName,
+            LastName = personDto.LastName,
+            Email = personDto.Email,
+            PhoneNumber = personDto.PhoneNumber
+        };
+        await _context.Persons.AddAsync(person, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        Employee employee = new Employee()
+        {
+            PositionId = dto.PositionId,
+            Salary = dto.Salary,
+            HireDate = dto.HireDate,
+            PersonId = person.Id,
+        };
+        await _context.Employees.AddAsync(employee, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+        dto.Id = employee.Id;
+        // var device = new Device
+        // {
+        //     Name = dto.Name,
+        //     DeviceType = deviceType,
+        //     IsEnabled = bool.Parse(dto.IsEnabled),
+        //     AdditionalProperties = dto.AdditionalProperties.GetRawText()
+        // };
+        // await _context.Devices.AddAsync(device, cancellationToken);
+        // dto.Id = device.Id;
+        return dto;
     }
 }

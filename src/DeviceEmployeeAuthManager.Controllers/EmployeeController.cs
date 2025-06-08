@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using src.DeviceEmployeeAuthManager.DTO;
+using src.DeviceEmployeeAuthManager.Exceptions;
 using src.DeviceEmployeeAuthManager.Services;
 
 namespace src.DeviceEmployeeAuthManager.Controllers;
@@ -47,6 +49,26 @@ public class EmployeeController : ControllerBase
         {
             _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
+        }
+    }
+    
+    [Authorize(Roles = "Admin")]
+    [HttpPost("/api/employee/")]
+    public async Task<IActionResult> AddEmployee(CreateEmployeeDto dto, CancellationToken ct)
+    {
+        try
+        {
+            CreateEmployeeDto response = await _service.CreateEmployee(dto, ct);
+            return Created("/api/employee", response);
+        }
+        catch (InvalidDeviceTypeException ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
     
