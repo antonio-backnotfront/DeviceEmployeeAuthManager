@@ -136,7 +136,7 @@ public class DeviceController : ControllerBase
         }
     }
     
-    [Authorize(Roles = "Admin, User")]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("/api/devices/{id}")]
     public async Task<IActionResult> DeleteDevice(int id, CancellationToken ct)
     {
