@@ -49,15 +49,7 @@ public class DeviceService : IDeviceService
                 AdditionalProperties = JsonDocument.Parse(device.AdditionalProperties ?? "").RootElement
             };
 
-            var activeAssignment = device.DeviceEmployees.FirstOrDefault(e => e.ReturnDate == null);
-            if (activeAssignment != null)
-            {
-                var person = activeAssignment.Employee.Person;
-                dto.CurrentEmployee = new GetEmployeesDto(
-                    activeAssignment.Id,
-                    $"{person.FirstName} {person.MiddleName} {person.LastName}"
-                );
-            }
+            
 
             return dto;
         }
