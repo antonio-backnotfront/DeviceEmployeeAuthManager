@@ -58,7 +58,8 @@ public class DeviceService : IDeviceService
             {
                 Name = device.Name,
                 Type = device.DeviceType.Name,
-                AdditionalProperties = JsonDocument.Parse(device.AdditionalProperties ?? "").RootElement
+                AdditionalProperties = JsonDocument.Parse(device.AdditionalProperties ?? "").RootElement,
+                IsEnabled = device.IsEnabled
             };
 
             
@@ -85,7 +86,7 @@ public class DeviceService : IDeviceService
         {
             Name = dto.Name,
             DeviceTypeId = deviceType.Id,
-            IsEnabled = bool.Parse(dto.IsEnabled),
+            IsEnabled = dto.IsEnabled,
             AdditionalProperties = dto.AdditionalProperties.GetRawText()
         };
         await _context.Devices.AddAsync(device, cancellationToken);
@@ -125,7 +126,7 @@ public class DeviceService : IDeviceService
             throw new KeyNotFoundException($"Device with ID {id} not found.");
 
         existingDevice.Name = dto.Name;
-        existingDevice.IsEnabled = bool.Parse(dto.IsEnabled);
+        existingDevice.IsEnabled = dto.IsEnabled;
         existingDevice.DeviceType = deviceType;
         existingDevice.AdditionalProperties = dto.AdditionalProperties.GetRawText();
 

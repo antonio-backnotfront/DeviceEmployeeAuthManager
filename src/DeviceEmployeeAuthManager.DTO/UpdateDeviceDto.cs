@@ -10,11 +10,11 @@ public class UpdateDeviceDto
     [Required]
     public string? DeviceType { get; set; }
     [Required]
-    public string IsEnabled { get; set; }
+    public bool IsEnabled { get; set; }
     [Required]
     public JsonElement AdditionalProperties { get; set; }
 
-    public UpdateDeviceDto(string name, string? deviceType, string isEnabled, JsonElement additionalProperties)
+    public UpdateDeviceDto(string name, string? deviceType, bool isEnabled, JsonElement additionalProperties)
     {
         Name = name;
         DeviceType = deviceType;

@@ -11,7 +11,7 @@ public class CreateDeviceDto
     [Required]
     public int TypeId { get; set; }
     [Required]
-    public string IsEnabled { get; set; }
+    public bool IsEnabled { get; set; }
     [Required]
     public JsonElement AdditionalProperties { get; set; }
 }
