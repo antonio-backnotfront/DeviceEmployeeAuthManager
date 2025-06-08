@@ -84,7 +84,7 @@ public class AccountService : IAccountService
                          ?? throw new KeyNotFoundException("Role not found");
         
         account.Username = dto.Username;
-        account.Password = dto.Password;
+        account.Password = _passwordHasher.HashPassword(account, dto.Password);
         account.EmployeeId = dto.EmployeeId;
         account.RoleId = dto.RoleId;
         
