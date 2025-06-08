@@ -7,7 +7,7 @@
             "rules": [
                 {
                     "paramName": "operationSystem",
-                    "regex:": "/^[a-zA-Z]{3,}$/"
+                    "regex": "/^[a-zA-Z]{3,}$/"
                 }
             ]
         },
