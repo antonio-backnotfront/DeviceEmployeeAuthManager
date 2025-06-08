@@ -18,9 +18,11 @@ public class AuthController : ControllerBase
     private readonly DeviceEmployeeDbContext _context;
     private readonly ITokenService _tokenService;
     private readonly PasswordHasher<Account> _passwordHasher;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(DeviceEmployeeDbContext context, ITokenService tokenService)
+    public AuthController(DeviceEmployeeDbContext context, ITokenService tokenService, ILogger<AuthController> logger)
     {
+        _logger = logger;
         _tokenService = tokenService;
         _context = context;
         _passwordHasher = new PasswordHasher<Account>();
@@ -36,11 +38,13 @@ public class AuthController : ControllerBase
                 .FirstOrDefaultAsync(e => e.Username == dto.Username, ct);
             if (foundUser == null)
             {
+                _logger.LogInformation("The user wasn't found");
                 return Unauthorized();
             }
             var verificationResult = _passwordHasher.VerifyHashedPassword(foundUser, foundUser.Password, dto.Password);
             if (verificationResult == PasswordVerificationResult.Failed)
             {
+                _logger.LogInformation("The user password is incorrect");
                 return Unauthorized();
             }
 
@@ -52,6 +56,7 @@ public class AuthController : ControllerBase
         }
         catch (KeyNotFoundException)
         {
+            _logger.LogInformation("Something went wrong during Authentication");
             return Unauthorized();
         }
     }

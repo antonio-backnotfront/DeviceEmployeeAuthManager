@@ -81,7 +81,7 @@ public class DeviceEmployeeDbContext : DbContext
         {
             Id = 1,
             Username = "admin.john",
-            Password = "hashedpassword1", // Replace with hashed value if applicable
+            Password = "hashedpassword1",
             EmployeeId = 1,
             RoleId = 1
         },
