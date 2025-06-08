@@ -45,7 +45,7 @@ public class DeviceService : IDeviceService
             var dto = new GetDeviceDto
             {
                 Name = device.Name,
-                DeviceType = device.DeviceType.Name,
+                Type = device.DeviceType.Name,
                 AdditionalProperties = JsonDocument.Parse(device.AdditionalProperties ?? "").RootElement
             };
 
@@ -61,13 +61,13 @@ public class DeviceService : IDeviceService
 
     public async Task<bool> CreateDevice(CreateDeviceDto dto, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(dto.DeviceType))
+        if (string.IsNullOrWhiteSpace(dto.TypeId))
             throw new ArgumentException("Invalid device type");
 
         if (string.IsNullOrWhiteSpace(dto.Name))
             throw new ArgumentException("Invalid device name");
 
-        var deviceType = await GetDeviceTypeByName(dto.DeviceType, cancellationToken)
+        var deviceType = await GetDeviceTypeByName(dto.TypeId, cancellationToken)
                          ?? throw new InvalidDeviceTypeException();
         var device = new Device
         {

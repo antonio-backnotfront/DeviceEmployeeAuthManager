@@ -20,8 +20,8 @@ public class DeviceValidator
             deviceJson,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
         );
-        Console.WriteLine($"device: {deviceDto?.DeviceType}");
-        if (deviceDto == null || string.IsNullOrEmpty(deviceDto.DeviceType))
+        Console.WriteLine($"device: {deviceDto?.TypeId}");
+        if (deviceDto == null || string.IsNullOrEmpty(deviceDto.TypeId))
         {
             errors.Add("Invalid device type");
             return errors;
@@ -64,7 +64,7 @@ public class DeviceValidator
         {
             string type = item.GetProperty("type").GetString()!;
             Console.WriteLine($"Validation type: {type}");
-            if (!string.Equals(type, deviceDto.DeviceType, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(type, deviceDto.TypeId, StringComparison.OrdinalIgnoreCase))
                 continue;
             Console.WriteLine($"Passed if");
             string preRequestName = item.GetProperty("preRequestName").GetString()!;

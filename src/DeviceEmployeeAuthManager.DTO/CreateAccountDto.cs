@@ -4,7 +4,7 @@ namespace src.DeviceEmployeeAuthManager.DTO;
 
 public class CreateAccountDto
 {
-    public int Id;
+    public int? Id;
     [Required]
     [RegularExpression(@"^[^\d]\w*", ErrorMessage = "Username must not start with a number.")]
     public string Username { get; set; }

@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
         {
             var foundUser = await _context.Accounts
                 .Include(e => e.Role)
-                .FirstOrDefaultAsync(e => e.Username == dto.Username, ct);
+                .FirstOrDefaultAsync(e => e.Username == dto.Login, ct);
             if (foundUser == null)
             {
                 _logger.LogError("The user wasn't found");

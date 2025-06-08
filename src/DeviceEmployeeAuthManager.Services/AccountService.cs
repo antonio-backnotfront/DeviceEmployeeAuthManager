@@ -34,7 +34,12 @@ public class AccountService : IAccountService
         {
             var acc = await _context.Accounts.FirstOrDefaultAsync(acc => acc.Id == id, cancellationToken);
             if (acc == null) return null;
-            return new GetAccountDto(acc);
+            string roleName =
+                (await _context.Roles.FirstOrDefaultAsync(role => role.Id == acc.RoleId, cancellationToken)).Name;
+            GetAccountDto dto = new GetAccountDto();
+            dto.Username = acc.Username;
+            dto.Role = roleName;
+            return dto;
         }
         catch (Exception ex)
         {
