@@ -73,7 +73,7 @@ public class DeviceService : IDeviceService
         {
             Name = dto.Name,
             DeviceType = deviceType,
-            IsEnabled = dto.IsEnabled,
+            IsEnabled = bool.Parse(dto.IsEnabled),
             AdditionalProperties = dto.AdditionalProperties.GetRawText()
         };
         await _context.Devices.AddAsync(device, cancellationToken);
