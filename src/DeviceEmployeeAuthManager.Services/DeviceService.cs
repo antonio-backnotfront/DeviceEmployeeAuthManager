@@ -113,7 +113,7 @@ public class DeviceService : IDeviceService
             throw new KeyNotFoundException($"Device with ID {id} not found.");
 
         existingDevice.Name = dto.Name;
-        existingDevice.IsEnabled = dto.IsEnabled;
+        existingDevice.IsEnabled = bool.Parse(dto.IsEnabled);
         existingDevice.DeviceType = deviceType;
         existingDevice.AdditionalProperties = dto.AdditionalProperties.GetRawText();
 
