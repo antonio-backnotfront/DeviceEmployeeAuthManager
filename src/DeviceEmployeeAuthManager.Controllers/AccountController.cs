@@ -11,9 +11,11 @@ namespace src.DeviceEmployeeAuthManager.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _service;
+    private readonly ILogger<AuthController> _logger;
 
-    public AccountController(IAccountService accountService)
+    public AccountController(IAccountService accountService, ILogger<AuthController> logger)
     {
+        this._logger = logger;
         this._service = accountService;
     }
 
@@ -28,6 +30,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
@@ -56,6 +59,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
@@ -71,10 +75,12 @@ public class AccountController : ControllerBase
         }
         catch (KeyNotFoundException e)
         {
+            _logger.LogError(e, e.Message);
             return BadRequest(e.Message);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
@@ -97,10 +103,12 @@ public class AccountController : ControllerBase
         }
         catch (KeyNotFoundException e)
         {
+            _logger.LogError(e, e.Message);
             return BadRequest(e.Message);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
@@ -116,10 +124,12 @@ public class AccountController : ControllerBase
         }
         catch (KeyNotFoundException)
         {
+            _logger.LogError("Account that needs to be deleted was not found");
             return NotFound($"No account found with id: '{id}'");
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
