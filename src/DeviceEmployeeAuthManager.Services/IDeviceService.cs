@@ -8,6 +8,8 @@ public interface IDeviceService
 {
     public Task<List<GetDevicesDto>> GetAllDevices(CancellationToken cancellationToken);
     
+    public Task<List<GetDeviceTypesDto>> GetDeviceTypesDto(CancellationToken cancellationToken);
+    
     public Task<GetDeviceDto?> GetDeviceById(int id, CancellationToken cancellationToken);
     
     public Task<bool> CreateDevice(CreateDeviceDto createDeviceDto, CancellationToken cancellationToken);

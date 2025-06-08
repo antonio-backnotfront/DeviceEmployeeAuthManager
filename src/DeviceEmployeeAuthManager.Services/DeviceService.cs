@@ -29,6 +29,18 @@ public class DeviceService : IDeviceService
             throw new ApplicationException("Unable to retrieve devices." + ex.Message);
         }
     }
+    
+    public async Task<List<GetDeviceTypesDto>> GetDeviceTypesDto(CancellationToken cancellationToken){
+        try
+        {
+            List<DeviceType> deviceTypes = await _context.DeviceTypes.ToListAsync(cancellationToken);
+            return deviceTypes.Select(d => new GetDeviceTypesDto(){Name = d.Name, Id = d.Id}).ToList();
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Unable to retrieve device types." + ex.Message);
+        }
+    }
 
     public async Task<GetDeviceDto?> GetDeviceById(int id, CancellationToken cancellationToken)
     {

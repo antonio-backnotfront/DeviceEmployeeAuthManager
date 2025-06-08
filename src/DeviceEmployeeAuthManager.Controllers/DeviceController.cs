@@ -40,6 +40,22 @@ public class DeviceController : ControllerBase
         }
     }
     
+    [Authorize(Roles = "Admin")]
+    [HttpGet("/api/devices/types")]
+    public async Task<IActionResult> GetDeviceTypes(CancellationToken ct)
+    {
+        try
+        {
+            var results = await _deviceService.GetDeviceTypesDto(ct);
+            return results.Count > 0 ? Ok(results) : NotFound("No device types found");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return Problem(detail: ex.Message);
+        }
+    }
+    
     [Authorize(Roles = "Admin, User")]
     [HttpGet("/api/devices/{id}")]
     public async Task<IActionResult> GetDevice(int id, CancellationToken ct)
