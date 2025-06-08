@@ -35,7 +35,7 @@ builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
 // !======== basic authentication (login + password) ========!
@@ -81,18 +81,6 @@ builder.Services.AddAuthentication(options =>
             }
             return Task.CompletedTask;
         }
-    };
-}).AddJwtBearer("IgnoreTokenExpirationScheme",opt =>
-{
-    opt.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,   //by who
-        ValidateAudience = true, //for whom
-        ValidateLifetime = false,
-        ClockSkew = TimeSpan.FromMinutes(2),
-        ValidIssuer = "https://localhost:5001", //should come from configuration
-        ValidAudience = "https://localhost:5001", //should come from configuration
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]))
     };
 });
 var app = builder.Build();
