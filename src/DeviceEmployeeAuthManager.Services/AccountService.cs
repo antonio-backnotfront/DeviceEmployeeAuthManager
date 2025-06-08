@@ -78,17 +78,17 @@ public class AccountService : IAccountService
         var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == dto.EmployeeId, cancellationToken)
                          ?? throw new KeyNotFoundException("Employee not found");
         
+        var account = _context.Accounts.FirstOrDefault(e => e.Id == id);
+        if (account == null) throw new KeyNotFoundException("Account not found");
         var role = await _context.Roles.FirstOrDefaultAsync(e => e.Id == dto.RoleId, cancellationToken)
                          ?? throw new KeyNotFoundException("Role not found");
         
-        var account = _context.Accounts.FirstOrDefault(e => e.Id == id);
-        if (account == null) throw new KeyNotFoundException("Account not found");
         account.Username = dto.Username;
         account.Password = dto.Password;
         account.EmployeeId = dto.EmployeeId;
         account.RoleId = dto.RoleId;
         
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
     

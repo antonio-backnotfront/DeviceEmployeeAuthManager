@@ -5,9 +5,13 @@ namespace src.DeviceEmployeeAuthManager.DTO;
 public class UpdateAccountDto
 {
     public int Id;
+    [Required]
     public string Username { get; set; }
+    [Required]
     public string Password { get; set; }
+    [Required]
     public int EmployeeId { get; set; }
+    [Required]
     public int RoleId { get; set; }
     
 }

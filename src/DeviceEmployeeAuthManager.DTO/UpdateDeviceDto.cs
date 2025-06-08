@@ -5,9 +5,13 @@ namespace src.DeviceEmployeeAuthManager.DTO;
 
 public class UpdateDeviceDto
 {
+    [Required]
     public string Name { get; set; }
+    [Required]
     public string? DeviceType { get; set; }
+    [Required]
     public string IsEnabled { get; set; }
+    [Required]
     public JsonElement AdditionalProperties { get; set; }
 
     public UpdateDeviceDto(string name, string? deviceType, string isEnabled, JsonElement additionalProperties)

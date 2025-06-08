@@ -73,18 +73,18 @@ public class DeviceService : IDeviceService
 
     public async Task<bool> CreateDevice(CreateDeviceDto dto, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(dto.TypeId))
-            throw new ArgumentException("Invalid device type");
+        var deviceType = await _context.DeviceTypes.FirstOrDefaultAsync(d => d.Id == dto.TypeId, cancellationToken);
+        if (deviceType == null)
+            throw new InvalidDeviceTypeException();
 
         if (string.IsNullOrWhiteSpace(dto.Name))
             throw new ArgumentException("Invalid device name");
 
-        var deviceType = await GetDeviceTypeByName(dto.TypeId, cancellationToken)
-                         ?? throw new InvalidDeviceTypeException();
+        
         var device = new Device
         {
             Name = dto.Name,
-            DeviceType = deviceType,
+            DeviceTypeId = deviceType.Id,
             IsEnabled = bool.Parse(dto.IsEnabled),
             AdditionalProperties = dto.AdditionalProperties.GetRawText()
         };

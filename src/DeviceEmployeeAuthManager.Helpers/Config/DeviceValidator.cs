@@ -10,27 +10,33 @@ public class DeviceValidator
     public static async Task<List<string>> ValidateAdditionalProperties(string deviceJson)
     {
         List<string> errors = new List<string>();
-        Console.WriteLine("Entered validator");
+        
 
         var validationJson = await File.ReadAllTextAsync("DeviceEmployeeAuthManager.Helpers/Config/validation.json");
         var validationRoot = JsonDocument.Parse(validationJson).RootElement;
 
-        Console.WriteLine($"device: {deviceJson}");
-        var deviceDto = JsonSerializer.Deserialize<CreateDeviceDto>(
-            deviceJson,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-        );
-        Console.WriteLine($"device: {deviceDto?.TypeId}");
-        if (deviceDto == null || string.IsNullOrEmpty(deviceDto.TypeId))
+        using JsonDocument deviceDoc = JsonDocument.Parse(deviceJson);
+        JsonElement rootElement = deviceDoc.RootElement;
+
+        // Get type identifier (support both CreateDeviceDto.TypeId and UpdateDeviceDto.DeviceType)
+        string? deviceType = null;
+        if (rootElement.TryGetProperty("typeId", out var typeIdElement))
+            deviceType = typeIdElement.ToString();
+        else if (rootElement.TryGetProperty("deviceType", out var deviceTypeElement))
+            deviceType = deviceTypeElement.GetString();
+        Console.WriteLine("1");
+        if (string.IsNullOrEmpty(deviceType))
         {
             errors.Add("Invalid device type");
             return errors;
         }
 
-        using JsonDocument deviceDoc = JsonDocument.Parse(deviceJson);
-        JsonElement rootElement = deviceDoc.RootElement;
-
-        JsonElement additionalProps = deviceDto.AdditionalProperties;
+        // Get additionalProps
+        if (!rootElement.TryGetProperty("additionalProperties", out JsonElement additionalProps))
+        {
+            errors.Add("Missing 'AdditionalProperties'");
+            return errors;
+        }
 
         // used reflection here because we may not know the type of the element on which this method can be called on
         // creates a dynamic custom method that may be invoked on JsonElement class
@@ -63,20 +69,20 @@ public class DeviceValidator
         foreach (var item in validationRoot.GetProperty("validations").EnumerateArray())
         {
             string type = item.GetProperty("type").GetString()!;
-            Console.WriteLine($"Validation type: {type}");
-            if (!string.Equals(type, deviceDto.TypeId, StringComparison.OrdinalIgnoreCase))
+            
+            if (!string.Equals(type, deviceType, StringComparison.OrdinalIgnoreCase))
                 continue;
-            Console.WriteLine($"Passed if");
+            
             string preRequestName = item.GetProperty("preRequestName").GetString()!;
             string expectedPreRequestValue = item.GetProperty("preRequestValue").GetString()!;
-            Console.WriteLine($"param: {preRequestName}");
-            Console.WriteLine($"param: {expectedPreRequestValue}");
+            
+            
 
             if (!TryGetProperty(rootElement, preRequestName, out JsonElement actualValueElement) ||
                 actualValueElement.GetString()?.ToLower() != expectedPreRequestValue.ToLower())
                 continue;
 
-            Console.WriteLine("Passed preRequest check");
+            
 
             foreach (var rule in item.GetProperty("rules").EnumerateArray())
             {
@@ -91,7 +97,7 @@ public class DeviceValidator
                 string actualValue = valueElement.GetString()!;
 
                 var regexProperty = rule.GetProperty("regex");
-                Console.WriteLine($"regex {actualValue} with  {regexProperty}");
+                
                 if (regexProperty.ValueKind == JsonValueKind.Array)
                 {
                     bool match = regexProperty.EnumerateArray()
@@ -101,7 +107,6 @@ public class DeviceValidator
                     {
                         errors.Add($"Value '{actualValue}' not in allowed list for {paramName}");
                     }
-                    Console.WriteLine($"matched {actualValue} with list {regexProperty.EnumerateArray().ToList()}");
                 }
                 else
                 {
@@ -110,7 +115,6 @@ public class DeviceValidator
                     {
                         errors.Add($"Regex '{regexPattern}' failed for {paramName} = '{actualValue}'");
                     }
-                    Console.WriteLine($"matched {actualValue} with {regexProperty.ValueKind}");
                 }
             }
         }
