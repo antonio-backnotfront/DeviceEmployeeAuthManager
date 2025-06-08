@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
+using src.DeviceEmployeeAuthManager.DAL;
 using src.DeviceEmployeeAuthManager.DTO;
 using src.DeviceEmployeeAuthManager.Helpers.Config;
 
@@ -28,7 +29,8 @@ public class DeviceMiddleware
             context.Request.Body.Position = 0;
             try
             {
-                List<string> errors = await DeviceValidator.ValidateAdditionalProperties(bodyString);
+                var dbContext = context.RequestServices.GetRequiredService<DeviceEmployeeDbContext>(); 
+                List<string> errors = await DeviceValidator.ValidateAdditionalProperties(bodyString, dbContext);
                 if (
                     (errors.Count > 0)
                 )
