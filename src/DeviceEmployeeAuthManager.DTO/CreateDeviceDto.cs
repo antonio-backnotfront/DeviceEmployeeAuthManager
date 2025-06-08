@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
 namespace src.DeviceEmployeeAuthManager.DTO;
@@ -5,8 +6,12 @@ namespace src.DeviceEmployeeAuthManager.DTO;
 public class CreateDeviceDto
 {
     public int? Id { get; set; }
+    [Required]
     public string Name { get; set; }
+    [Required]
     public string TypeId { get; set; }
+    [Required]
     public string IsEnabled { get; set; }
+    [Required]
     public JsonElement AdditionalProperties { get; set; }
 }

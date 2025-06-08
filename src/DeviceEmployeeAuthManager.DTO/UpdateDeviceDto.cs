@@ -5,7 +5,6 @@ namespace src.DeviceEmployeeAuthManager.DTO;
 
 public class UpdateDeviceDto
 {
-    [Required]
     public string Name { get; set; }
     public string? DeviceType { get; set; }
     public string IsEnabled { get; set; }
