@@ -32,7 +32,7 @@ public class DeviceValidator
 
         JsonElement additionalProps = deviceDto.AdditionalProperties;
 
-        // used reflection here because we don't know the exact field name inside our device json object 
+        // used reflection here because we may not know the type of the element on which this method can be called on
         // creates a dynamic custom method that may be invoked on JsonElement class
         MethodInfo getPropertyMethod = typeof(JsonElement).GetMethod("GetProperty", new Type[] { typeof(string) })!;
         
@@ -46,6 +46,8 @@ public class DeviceValidator
             try
             {
                 propValue = (JsonElement)getPropertyMethod.Invoke(element, new object[] { propName })!;
+                // could simply use this ⌄ instead of this ^
+                // propValue = element.GetProperty(propName);
                 return true;
             }
             catch (TargetInvocationException tie) when (tie.InnerException is KeyNotFoundException)
