@@ -93,7 +93,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<DeviceMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
