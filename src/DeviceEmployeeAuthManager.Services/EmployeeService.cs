@@ -44,7 +44,7 @@ public class EmployeeService : IEmployeeService
 
             return new GetEmployeeDto
             {
-                PersonDto = new PersonDto
+                Person = new PersonDto
                 {
                     Id = employee.Id,
                     FirstName = employee.Person.FirstName,
@@ -54,11 +54,7 @@ public class EmployeeService : IEmployeeService
                     PassportNumber = employee.Person.PassportNumber,
                     PhoneNumber = employee.Person.PhoneNumber
                 },
-                PositionDto = new PositionDto
-                {
-                    Id = employee.Position.Id,
-                    PositionName = employee.Position.Name
-                },
+                Position = employee.Position.Name,
                 HireDate = employee.HireDate,
                 Salary = employee.Salary
             };

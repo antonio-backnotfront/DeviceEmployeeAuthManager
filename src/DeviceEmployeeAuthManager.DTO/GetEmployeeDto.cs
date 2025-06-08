@@ -2,11 +2,11 @@ namespace src.DeviceEmployeeAuthManager.DTO;
 
 public class GetEmployeeDto
 {
-    public GetEmployeeDto(PersonDto personDto, decimal salary, object positionDto, DateTime hireDate)
+    public GetEmployeeDto(PersonDto personDto, decimal salary, string position, DateTime hireDate)
     {
-        PersonDto = personDto;
+        Person = personDto;
         Salary = salary;
-        PositionDto = positionDto;
+        Position = position;
         HireDate = hireDate;
     }
 
@@ -14,8 +14,8 @@ public class GetEmployeeDto
     {
     }
 
-    public PersonDto PersonDto { get; set; }
-    public object PositionDto { get; set; }
+    public PersonDto Person { get; set; }
+    public string Position { get; set; }
     public decimal Salary { get; set; }
     public DateTime HireDate { get; set; }
 }
