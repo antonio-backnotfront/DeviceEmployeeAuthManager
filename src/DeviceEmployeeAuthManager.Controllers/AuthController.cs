@@ -38,13 +38,13 @@ public class AuthController : ControllerBase
                 .FirstOrDefaultAsync(e => e.Username == dto.Username, ct);
             if (foundUser == null)
             {
-                _logger.LogInformation("The user wasn't found");
+                _logger.LogError("The user wasn't found");
                 return Unauthorized();
             }
             var verificationResult = _passwordHasher.VerifyHashedPassword(foundUser, foundUser.Password, dto.Password);
             if (verificationResult == PasswordVerificationResult.Failed)
             {
-                _logger.LogInformation("The user password is incorrect");
+                _logger.LogError("The user password is incorrect");
                 return Unauthorized();
             }
 
@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
         }
         catch (KeyNotFoundException)
         {
-            _logger.LogInformation("Something went wrong during Authentication");
+            _logger.LogError("Something went wrong during Authentication");
             return Unauthorized();
         }
     }

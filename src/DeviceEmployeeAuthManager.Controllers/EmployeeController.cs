@@ -10,9 +10,11 @@ namespace src.DeviceEmployeeAuthManager.Controllers;
 public class EmployeeController : ControllerBase
 {
     private readonly IEmployeeService _service;
+    private readonly ILogger<DeviceController> _logger;
 
-    public EmployeeController(IEmployeeService employeeService)
+    public EmployeeController(IEmployeeService employeeService, ILogger<DeviceController> logger)
     {
+        this._logger = logger;
         this._service = employeeService;
     }
 
@@ -26,6 +28,7 @@ public class EmployeeController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
@@ -40,6 +43,7 @@ public class EmployeeController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, ex.Message);
             return Problem(detail: ex.Message);
         }
     }
