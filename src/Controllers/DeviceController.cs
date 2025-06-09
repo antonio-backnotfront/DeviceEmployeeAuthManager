@@ -97,6 +97,11 @@ public class DeviceController : ControllerBase
             _logger.LogError(ex, ex.Message);
             return BadRequest(ex.Message);
         }
+        catch (ArgumentException ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return BadRequest(ex.Message);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);
