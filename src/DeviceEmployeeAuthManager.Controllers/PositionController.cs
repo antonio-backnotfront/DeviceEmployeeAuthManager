@@ -24,7 +24,7 @@ public class PositionController : ControllerBase
         try
         {
             var list = await _service.GetAllPositions(ct);
-            return list.Any() ? Ok(list) : NotFound("No positions found");
+            return Ok(list);
         }
         catch (Exception ex)
         {

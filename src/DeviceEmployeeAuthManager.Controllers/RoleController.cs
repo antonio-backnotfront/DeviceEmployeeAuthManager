@@ -25,7 +25,7 @@ public class RoleController : ControllerBase
         try
         {
             var list = await _service.GetAllRoles(ct);
-            return list.Any() ? Ok(list) : NotFound("No roles found");
+            return Ok(list);
         }
         catch (Exception ex)
         {

@@ -31,7 +31,7 @@ public class DeviceController : ControllerBase
         try
         {
             var results = await _deviceService.GetAllDevices(ct);
-            return results.Count > 0 ? Ok(results) : NotFound("No devices found");
+            return Ok(results);
         }
         catch (Exception ex)
         {
@@ -47,7 +47,7 @@ public class DeviceController : ControllerBase
         try
         {
             var results = await _deviceService.GetDeviceTypesDto(ct);
-            return results.Count > 0 ? Ok(results) : NotFound("No device types found");
+            return Ok(results);
         }
         catch (Exception ex)
         {

@@ -26,7 +26,7 @@ public class AccountController : ControllerBase
         try
         {
             var list = await _service.GetAllAccounts(ct);
-            return list.Any() ? Ok(list) : NotFound("No accounts found");
+            return Ok(list);
         }
         catch (Exception ex)
         {

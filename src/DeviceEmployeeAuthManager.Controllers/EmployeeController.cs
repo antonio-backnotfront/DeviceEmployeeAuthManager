@@ -27,7 +27,7 @@ public class EmployeeController : ControllerBase
         try
         {
             var list = await _service.GetAllEmployees(ct);
-            return list.Any() ? Ok(list) : NotFound("No employees found");
+            return Ok(list);
         }
         catch (Exception ex)
         {
