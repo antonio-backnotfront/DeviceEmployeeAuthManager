@@ -7,25 +7,19 @@ namespace src.DeviceEmployeeAuthManager.Services;
 public class PositionService : IPositionService
 {
     private DeviceEmployeeDbContext _context;
+
     public PositionService(DeviceEmployeeDbContext context)
     {
         _context = context;
     }
-    
+
     public async Task<List<GetPositionsDto>> GetAllPositions(CancellationToken cancellationToken)
     {
-        try
+        var roles = await _context.Positions.ToListAsync(cancellationToken);
+        return roles.Select(e => new GetPositionsDto()
         {
-            var roles = await _context.Positions.ToListAsync(cancellationToken);
-            return roles.Select(e => new GetPositionsDto()
-            {
-                Id = e.Id,
-                Name = $"{e.Name}"
-            }).ToList();
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException("Error while getting all positions", ex);
-        }
+            Id = e.Id,
+            Name = $"{e.Name}"
+        }).ToList();
     }
 }

@@ -19,57 +19,36 @@ public class DeviceService : IDeviceService
 
     public async Task<List<GetDevicesDto>> GetAllDevices(CancellationToken cancellationToken)
     {
-        try
-        {
-            List<Device> devices = await _context.Devices.ToListAsync(cancellationToken);
-            return devices.Select(d => new GetDevicesDto(d.Id, d.Name)).ToList();
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException("Unable to retrieve devices." + ex.Message);
-        }
+        List<Device> devices = await _context.Devices.ToListAsync(cancellationToken);
+        return devices.Select(d => new GetDevicesDto(d.Id, d.Name)).ToList();
     }
-    
-    public async Task<List<GetDeviceTypesDto>> GetDeviceTypesDto(CancellationToken cancellationToken){
-        try
-        {
-            List<DeviceType> deviceTypes = await _context.DeviceTypes.ToListAsync(cancellationToken);
-            return deviceTypes.Select(d => new GetDeviceTypesDto(){Name = d.Name, Id = d.Id}).ToList();
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException("Unable to retrieve device types." + ex.Message);
-        }
+
+    public async Task<List<GetDeviceTypesDto>> GetDeviceTypesDto(CancellationToken cancellationToken)
+    {
+        List<DeviceType> deviceTypes = await _context.DeviceTypes.ToListAsync(cancellationToken);
+        return deviceTypes.Select(d => new GetDeviceTypesDto() { Name = d.Name, Id = d.Id }).ToList();
     }
 
     public async Task<GetDeviceDto?> GetDeviceById(int id, CancellationToken cancellationToken)
     {
-        try
+        var device = await _context.Devices
+            .Include(d => d.DeviceType)
+            .Include(d => d.DeviceEmployees)
+            .ThenInclude(de => de.Employee)
+            .ThenInclude(e => e.Person)
+            .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
+        ;
+        if (device is null) return null;
+        var dto = new GetDeviceDto
         {
-            var device = await _context.Devices
-                .Include(d => d.DeviceType)
-                .Include(d => d.DeviceEmployees)
-                .ThenInclude(de => de.Employee)
-                .ThenInclude(e => e.Person)
-                .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
-            ;
-            if (device is null) return null;
-            var dto = new GetDeviceDto
-            {
-                Name = device.Name,
-                Type = device.DeviceType.Name,
-                AdditionalProperties = JsonDocument.Parse(device.AdditionalProperties ?? "").RootElement,
-                IsEnabled = device.IsEnabled
-            };
+            Name = device.Name,
+            Type = device.DeviceType.Name,
+            AdditionalProperties = JsonDocument.Parse(device.AdditionalProperties ?? "").RootElement,
+            IsEnabled = device.IsEnabled
+        };
 
-            
 
-            return dto;
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException($"Unable to retrieve device with ID {id}.", ex);
-        }
+        return dto;
     }
 
     public async Task<bool> CreateDevice(CreateDeviceDto dto, CancellationToken cancellationToken)
@@ -81,7 +60,7 @@ public class DeviceService : IDeviceService
         if (string.IsNullOrWhiteSpace(dto.Name))
             throw new ArgumentException("Invalid device name");
 
-        
+
         var device = new Device
         {
             Name = dto.Name,
@@ -155,7 +134,8 @@ public class DeviceService : IDeviceService
 
     public async Task<List<int>> GetDeviceIdsByEmployeeId(int id, CancellationToken cancellationToken)
     {
-        var deviceIds = await _context.DeviceEmployees.Where(d => d.EmployeeId == id).Select(d => d.DeviceId).ToListAsync(cancellationToken);
+        var deviceIds = await _context.DeviceEmployees.Where(d => d.EmployeeId == id).Select(d => d.DeviceId)
+            .ToListAsync(cancellationToken);
         return deviceIds;
     }
 }

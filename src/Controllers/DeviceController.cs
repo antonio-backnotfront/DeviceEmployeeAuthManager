@@ -8,7 +8,6 @@ using src.DeviceEmployeeAuthManager.Services.Tokens;
 
 namespace src.DeviceEmployeeAuthManager.Controllers;
 
-
 [ApiController]
 [Route("/api/devices/[controller]")]
 public class DeviceController : ControllerBase
@@ -17,7 +16,8 @@ public class DeviceController : ControllerBase
     private readonly IAccountService _accountService;
     private readonly ILogger<DeviceController> _logger;
 
-    public DeviceController(IDeviceService deviceService, IAccountService accountService, ILogger<DeviceController> logger)
+    public DeviceController(IDeviceService deviceService, IAccountService accountService,
+        ILogger<DeviceController> logger)
     {
         this._deviceService = deviceService;
         this._accountService = accountService;
@@ -39,7 +39,7 @@ public class DeviceController : ControllerBase
             return Problem(detail: ex.Message);
         }
     }
-    
+
     [Authorize(Roles = "Admin")]
     [HttpGet("/api/devices/types")]
     public async Task<IActionResult> GetDeviceTypes(CancellationToken ct)
@@ -55,7 +55,7 @@ public class DeviceController : ControllerBase
             return Problem(detail: ex.Message);
         }
     }
-    
+
     [Authorize(Roles = "Admin, User")]
     [HttpGet("/api/devices/{id}")]
     public async Task<IActionResult> GetDevice(int id, CancellationToken ct)
@@ -72,8 +72,8 @@ public class DeviceController : ControllerBase
                 if (!deviceIdsByEmployee.Contains(id))
                     return Forbid();
             }
-            
-            var device = await _deviceService.GetDeviceById(id,ct);
+
+            var device = await _deviceService.GetDeviceById(id, ct);
             return device is not null ? Ok(device) : NotFound("Device not found");
         }
         catch (Exception ex)
@@ -82,7 +82,7 @@ public class DeviceController : ControllerBase
             return Problem(detail: ex.Message);
         }
     }
-    
+
     [Authorize(Roles = "Admin")]
     [HttpPost("/api/devices/")]
     public async Task<IActionResult> AddDevice(CreateDeviceDto dto, CancellationToken ct)
@@ -108,7 +108,7 @@ public class DeviceController : ControllerBase
             return Problem(detail: ex.Message);
         }
     }
-    
+
     [Authorize(Roles = "Admin, User")]
     [HttpPut("/api/devices/{id}")]
     public async Task<IActionResult> UpdateDevice(int id, UpdateDeviceDto dto, CancellationToken ct)
@@ -125,7 +125,7 @@ public class DeviceController : ControllerBase
                 if (!deviceIdsByEmployee.Contains(id))
                     return Forbid();
             }
-            
+
             await _deviceService.UpdateDevice(id, dto, ct);
             return Ok();
         }
@@ -145,7 +145,7 @@ public class DeviceController : ControllerBase
             return Problem(detail: ex.Message);
         }
     }
-    
+
     [Authorize(Roles = "Admin")]
     [HttpDelete("/api/devices/{id}")]
     public async Task<IActionResult> DeleteDevice(int id, CancellationToken ct)
@@ -166,7 +166,4 @@ public class DeviceController : ControllerBase
             return Problem(detail: ex.Message);
         }
     }
-    
-    
-    
 }
