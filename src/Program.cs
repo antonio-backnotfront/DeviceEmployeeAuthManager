@@ -29,12 +29,12 @@ builder.Services.Configure<JwtOptions>(jwtConfigData);
 var connectionString = builder.Configuration.GetConnectionString("DefaultDatabase");
 builder.Services.AddDbContext<DeviceEmployeeDbContext>(opt => opt.UseSqlServer(connectionString));
 
-builder.Services.AddTransient<IEmployeeService, EmployeeService>();
-builder.Services.AddTransient<IDeviceService, DeviceService>();
-builder.Services.AddTransient<IAccountService, AccountService>();
-builder.Services.AddTransient<ITokenService, TokenService>();
-builder.Services.AddTransient<IRoleService, RoleService>();
-builder.Services.AddTransient<IPositionService, PositionService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IDeviceService, DeviceService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IPositionService, PositionService>();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
