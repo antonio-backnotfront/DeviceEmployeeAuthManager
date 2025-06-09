@@ -21,7 +21,7 @@ public class EmployeeController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpGet("/api/employee")]
+    [HttpGet("/api/employees")]
     public async Task<IActionResult> GetAllEmployees(CancellationToken ct)
     {
         try
@@ -37,7 +37,7 @@ public class EmployeeController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpGet("/api/employee/{id}")]
+    [HttpGet("/api/employees/{id}")]
     public async Task<IActionResult> GetEmployeeById(int id, CancellationToken ct)
     {
         try
@@ -53,13 +53,13 @@ public class EmployeeController : ControllerBase
     }
     
     [Authorize(Roles = "Admin")]
-    [HttpPost("/api/employee/")]
+    [HttpPost("/api/employees/")]
     public async Task<IActionResult> AddEmployee(CreateEmployeeDto dto, CancellationToken ct)
     {
         try
         {
             CreateEmployeeDto response = await _service.CreateEmployee(dto, ct);
-            return Created("/api/employee", response);
+            return Created("/api/employees", response);
         }
         catch (InvalidDeviceTypeException ex)
         {
