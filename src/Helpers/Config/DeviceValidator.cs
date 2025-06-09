@@ -15,7 +15,7 @@ public class DeviceValidator
         List<string> errors = new List<string>();
 
 
-        var validationJson = await File.ReadAllTextAsync("DeviceEmployeeAuthManager.Helpers/Config/validation.json");
+        var validationJson = await File.ReadAllTextAsync("Helpers/Config/validation.json");
         var validationRoot = JsonDocument.Parse(validationJson).RootElement;
 
         using JsonDocument deviceDoc = JsonDocument.Parse(deviceJson);
