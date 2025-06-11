@@ -23,6 +23,7 @@ public class DeviceMiddleware
         if ((context.Request.Method == "PUT" || context.Request.Method == "POST") &&
             context.Request.Path.StartsWithSegments("/api/devices"))
         {
+            _logger.LogInformation("DeviceMiddleware started its work");
             context.Request.EnableBuffering();
             using var reader = new StreamReader(context.Request.Body, Encoding.UTF8, leaveOpen: true);
             var bodyString = await reader.ReadToEndAsync();
