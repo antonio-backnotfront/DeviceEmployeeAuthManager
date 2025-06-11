@@ -11,22 +11,30 @@ namespace src.DeviceEmployeeAuthManager.Controllers;
 [Route("/api/employee/[controller]")]
 public class EmployeeController : ControllerBase
 {
-    private readonly IEmployeeService _service;
+    private readonly IEmployeeService _employeeService;
     private readonly ILogger<DeviceController> _logger;
+    private readonly IAccountService _accountService;
 
-    public EmployeeController(IEmployeeService employeeService, ILogger<DeviceController> logger)
+    public EmployeeController(IEmployeeService employeeService, IAccountService accountService, ILogger<DeviceController> logger)
     {
         this._logger = logger;
-        this._service = employeeService;
+        this._employeeService = employeeService;
+        this._accountService = accountService;
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, User")]
     [HttpGet("/api/employees")]
     public async Task<IActionResult> GetAllEmployees(CancellationToken ct)
     {
         try
         {
-            var list = await _service.GetAllEmployees(ct);
+            var currentUserName = User.Identity?.Name;
+            if (currentUserName == null)
+                return Forbid();
+            var currentUser = await _accountService.GetAccountByUsername(currentUserName, ct);
+            if (currentUser.Role.Name != "Admin")
+                return Forbid();
+            var list = await _employeeService.GetAllEmployees(ct);
             return Ok(list);
         }
         catch (Exception ex)
@@ -36,13 +44,20 @@ public class EmployeeController : ControllerBase
         }
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, User")]
     [HttpGet("/api/employees/{id}")]
     public async Task<IActionResult> GetEmployeeById(int id, CancellationToken ct)
     {
         try
         {
-            var employee = await _service.GetEmployeeById(id, ct);
+            var currentUserName = User.Identity?.Name;
+            if (currentUserName == null)
+                return Forbid();
+            var currentUser = await _accountService.GetAccountByUsername(currentUserName, ct);
+            var employee = await _employeeService.GetEmployeeById(id, ct);
+            
+            if (currentUser.Role.Name != "Admin" && currentUser.EmployeeId != id)
+                return Forbid();
             return employee != null ? Ok(employee) : NotFound("Employee not found");
         }
         catch (Exception ex)
@@ -58,7 +73,7 @@ public class EmployeeController : ControllerBase
     {
         try
         {
-            CreateEmployeeDto response = await _service.CreateEmployee(dto, ct);
+            CreateEmployeeDto response = await _employeeService.CreateEmployee(dto, ct);
             return Created("/api/employees", response);
         }
         catch (InvalidDeviceTypeException ex)
