@@ -31,7 +31,7 @@ public class AccountController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);
-            return Problem(detail: ex.Message);
+            return Problem();
         }
     }
 
@@ -60,7 +60,7 @@ public class AccountController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);
-            return Problem(detail: ex.Message);
+            return Problem();
         }
     }
 
@@ -81,7 +81,7 @@ public class AccountController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);
-            return Problem(detail: ex.Message);
+            return Problem();
         }
     }
     
@@ -109,7 +109,7 @@ public class AccountController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);
-            return Problem(detail: ex.Message);
+            return Problem();
         }
     }
     
@@ -130,7 +130,7 @@ public class AccountController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);
-            return Problem(detail: ex.Message);
+            return Problem();
         }
     }
     

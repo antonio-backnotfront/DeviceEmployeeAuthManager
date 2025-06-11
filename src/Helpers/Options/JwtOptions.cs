@@ -3,6 +3,7 @@ namespace src.DeviceEmployeeAuthManager.Helpers.Options;
 public class JwtOptions
 {
     // who issues
+    
     public required string Issuer { get; set; }
     // for who
     public required string Audience { get; set; }

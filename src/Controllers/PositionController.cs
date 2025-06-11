@@ -29,7 +29,7 @@ public class PositionController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);
-            return Problem(detail: ex.Message);
+            return Problem();
         }
     }
     
