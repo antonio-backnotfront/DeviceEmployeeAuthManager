@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using src.DeviceEmployeeAuthManager.DAL;
 using src.DeviceEmployeeAuthManager.DTO;
 using src.DeviceEmployeeAuthManager.Helpers.Config;
+using src.Helpers.Config;
 
 namespace src.DeviceEmployeeAuthManager.Middlewares;
 
@@ -18,7 +19,7 @@ public class DeviceMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, IDeviceValidator deviceValidator)
     {
         if ((context.Request.Method == "PUT" || context.Request.Method == "POST") &&
             context.Request.Path.StartsWithSegments("/api/devices"))
@@ -31,7 +32,7 @@ public class DeviceMiddleware
             try
             {
                 var dbContext = context.RequestServices.GetRequiredService<DeviceEmployeeDbContext>(); 
-                List<string> errors = await DeviceValidator.ValidateAdditionalProperties(bodyString, dbContext);
+                List<string> errors = await deviceValidator.ValidateAdditionalProperties(bodyString, dbContext);
                 if (
                     (errors.Count > 0)
                 )

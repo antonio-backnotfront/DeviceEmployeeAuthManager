@@ -3,13 +3,13 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using src.DeviceEmployeeAuthManager.DAL;
-using src.DeviceEmployeeAuthManager.DTO;
+using src.DeviceEmployeeAuthManager.Helpers.Config;
 
-namespace src.DeviceEmployeeAuthManager.Helpers.Config;
+namespace src.Helpers.Config;
 
-public class DeviceValidator
+public class DeviceValidator : IDeviceValidator
 {
-    public static async Task<List<string>> ValidateAdditionalProperties(string deviceJson,
+    public async Task<List<string>> ValidateAdditionalProperties(string deviceJson,
         DeviceEmployeeDbContext context)
     {
         List<string> errors = new List<string>();

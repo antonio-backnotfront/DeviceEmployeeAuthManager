@@ -11,11 +11,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using src.DeviceEmployeeAuthManager.DAL;
+using src.DeviceEmployeeAuthManager.Helpers.Config;
 using src.DeviceEmployeeAuthManager.Helpers.Options;
 using src.DeviceEmployeeAuthManager.Middlewares;
 // using src.DeviceEmployeeAuthManager.Repositories;
 using src.DeviceEmployeeAuthManager.Services;
 using src.DeviceEmployeeAuthManager.Services.Tokens;
+using src.Helpers.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -35,6 +37,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IPositionService, PositionService>();
+builder.Services.AddScoped<IDeviceValidator, DeviceValidator>();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
