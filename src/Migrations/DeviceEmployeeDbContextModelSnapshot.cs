@@ -95,7 +95,7 @@ namespace src.Migrations
                         });
                 });
 
-            modelBuilder.Entity("src.Models.Device", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Device", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -174,7 +174,7 @@ namespace src.Migrations
                         });
                 });
 
-            modelBuilder.Entity("src.Models.DeviceEmployee", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.DeviceEmployee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,7 +242,7 @@ namespace src.Migrations
                         });
                 });
 
-            modelBuilder.Entity("src.Models.DeviceType", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.DeviceType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -286,7 +286,7 @@ namespace src.Migrations
                         });
                 });
 
-            modelBuilder.Entity("src.Models.Employee", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -358,7 +358,7 @@ namespace src.Migrations
                         });
                 });
 
-            modelBuilder.Entity("src.Models.Person", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -444,7 +444,7 @@ namespace src.Migrations
                         });
                 });
 
-            modelBuilder.Entity("src.Models.Position", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Position", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -496,7 +496,7 @@ namespace src.Migrations
                         });
                 });
 
-            modelBuilder.Entity("src.Models.Role", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -525,15 +525,15 @@ namespace src.Migrations
                         });
                 });
 
-            modelBuilder.Entity("src.Models.Account", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Account", b =>
                 {
-                    b.HasOne("src.Models.Employee", "Employee")
+                    b.HasOne("src.DeviceEmployeeAuthManager.Models.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("src.Models.Role", "Role")
+                    b.HasOne("src.DeviceEmployeeAuthManager.Models.Role", "Role")
                         .WithMany("Accounts")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -544,24 +544,24 @@ namespace src.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("src.Models.Device", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Device", b =>
                 {
-                    b.HasOne("src.Models.DeviceType", "DeviceType")
+                    b.HasOne("src.DeviceEmployeeAuthManager.Models.DeviceType", "DeviceType")
                         .WithMany("Devices")
                         .HasForeignKey("DeviceTypeId");
 
                     b.Navigation("DeviceType");
                 });
 
-            modelBuilder.Entity("src.Models.DeviceEmployee", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.DeviceEmployee", b =>
                 {
-                    b.HasOne("src.Models.Device", "Device")
+                    b.HasOne("src.DeviceEmployeeAuthManager.Models.Device", "Device")
                         .WithMany("DeviceEmployees")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("src.Models.Employee", "Employee")
+                    b.HasOne("src.DeviceEmployeeAuthManager.Models.Employee", "Employee")
                         .WithMany("DeviceEmployees")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -572,15 +572,15 @@ namespace src.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("src.Models.Employee", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Employee", b =>
                 {
-                    b.HasOne("src.Models.Person", "Person")
+                    b.HasOne("src.DeviceEmployeeAuthManager.Models.Person", "Person")
                         .WithOne("Employee")
-                        .HasForeignKey("src.Models.Employee", "PersonId")
+                        .HasForeignKey("src.DeviceEmployeeAuthManager.Models.Employee", "PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("src.Models.Position", "Position")
+                    b.HasOne("src.DeviceEmployeeAuthManager.Models.Position", "Position")
                         .WithMany("Employees")
                         .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -591,33 +591,33 @@ namespace src.Migrations
                     b.Navigation("Position");
                 });
 
-            modelBuilder.Entity("src.Models.Device", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Device", b =>
                 {
                     b.Navigation("DeviceEmployees");
                 });
 
-            modelBuilder.Entity("src.Models.DeviceType", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.DeviceType", b =>
                 {
                     b.Navigation("Devices");
                 });
 
-            modelBuilder.Entity("src.Models.Employee", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Employee", b =>
                 {
                     b.Navigation("DeviceEmployees");
                 });
 
-            modelBuilder.Entity("src.Models.Person", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Person", b =>
                 {
                     b.Navigation("Employee")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("src.Models.Position", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Position", b =>
                 {
                     b.Navigation("Employees");
                 });
 
-            modelBuilder.Entity("src.Models.Role", b =>
+            modelBuilder.Entity("src.DeviceEmployeeAuthManager.Models.Role", b =>
                 {
                     b.Navigation("Accounts");
                 });
